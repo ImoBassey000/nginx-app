@@ -1,1 +1,1 @@
-# nginx-app
+# Nginx App Deployment with CI/CD
