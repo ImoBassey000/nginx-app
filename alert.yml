@@ -1,0 +1,10 @@
+groups:
+- name: example
+  rules:
+  - alert: HighCPUUsage
+    expr: process_cpu_seconds_total > 0.5
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "CPU usage is over 50% for 5 minutes"

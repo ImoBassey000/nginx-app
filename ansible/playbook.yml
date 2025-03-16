@@ -1,0 +1,35 @@
+
+- name: Configure Nginx server and deploy application
+  hosts: all
+  become: true
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Deploy index.html
+      copy:
+        content: |
+          <html>
+            <body>
+              <h1>Welcome Imo Bassey</h1>
+            </body>
+          </html>
+        dest: /var/www/html/index.html
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Install Prometheus
+      apt:
+        name: prometheus
+        state: present
+
