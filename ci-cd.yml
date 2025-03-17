@@ -15,10 +15,10 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+      - name: Install Hadolint
+        run: sudo apt-get install -y hadolint
       - name: Lint Dockerfile
-        run: |
-          sudo apt-get install -y hadolint
-          hadolint Dockerfile
+        run: hadolint Dockerfile
 
   test:
     name: Run Unit Tests
@@ -31,15 +31,23 @@ jobs:
         run: echo "No tests yet! Add unit tests here."
 
   build:
-    name: Build Application
+    name: Build Docker Image
     runs-on: ubuntu-latest
     needs: test
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Build Docker Image
+      - name: Set Up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and Push Docker Image
         run: |
-          docker build -t nginx-app:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/nginx-app:latest
 
   deploy:
     name: Deploy Application
@@ -58,3 +66,6 @@ jobs:
         run: |
           cd terraform
           terraform apply -auto-approve
+      - name: Set Up EC2 with Docker and Ansible
+        run: |
+          ssh -i ${secrets.AWS_KEY_PAIR} ec2-user@${{ steps.deploy.outputs.instance_ip }} "bash -s" < ansible/playbook.yml

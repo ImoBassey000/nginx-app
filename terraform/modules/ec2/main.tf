@@ -8,8 +8,21 @@ resource "aws_instance" "my-ec2-instance" {
   tags = {
     Name = "WebServer"
   }
+
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo apt-get update
+              sudo apt-get install -y ansible
+            
+            EOF
+
 }
 
 output "public_ip" {
   value = aws_instance.my-ec2-instance.public_ip
 }
+
+
+
+
+

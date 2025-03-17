@@ -1,0 +1,70 @@
+- hosts: monitoring
+  become: true
+  tasks:
+    - name: Install dependencies
+      apt:
+        name:
+          - openjdk-17-jdk
+          - apt-transport-https
+          - software-properties-common
+          - curl
+        state: present
+
+    - name: Add Elasticsearch GPG Key
+      shell: |
+        curl -fsSL https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+
+    - name: Add Elasticsearch repository
+      shell: |
+        echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-7.x.list
+        apt update
+
+    - name: Install Elasticsearch
+      apt:
+        name: elasticsearch
+        state: present
+
+    - name: Start and enable Elasticsearch
+      systemd:
+        name: elasticsearch
+        state: started
+        enabled: yes
+
+    - name: Install Logstash
+      apt:
+        name: logstash
+        state: present
+
+    - name: Configure Logstash
+      copy:
+        dest: /etc/logstash/conf.d/logstash.conf
+        content: |
+          input {
+            beats {
+              port => 5044
+            }
+          }
+          output {
+            elasticsearch {
+              hosts => ["aws.my-instance.ip:9200"]
+              manage_template => false
+              index => "logs-%{+YYYY.MM.dd}"
+            }
+          }
+
+    - name: Start and enable Logstash
+      systemd:
+        name: logstash
+        state: started
+        enabled: yes
+
+    - name: Install Kibana
+      apt:
+        name: kibana
+        state: present
+
+    - name: Start and enable Kibana
+      systemd:
+        name: kibana
+        state: started
+        enabled: yes
