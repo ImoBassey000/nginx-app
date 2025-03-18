@@ -1,1 +1,3 @@
-{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"database","Source":"./modules/database","Dir":"modules/database"},{"Key":"ec2","Source":"./modules/ec2","Dir":"modules/ec2"},{"Key":"ec2_instance","Source":"./modules/ec2","Dir":"modules/ec2"},{"Key":"key_pair","Source":"./modules/key-pair","Dir":"modules/key-pair"},{"Key":"load_balancer","Source":"./modules/load-balancer","Dir":"modules/load-balancer"},{"Key":"rds","Source":"./modules/rds","Dir":"modules/rds"},{"Key":"security_group","Source":"./modules/security-group","Dir":"modules/security-group"},{"Key":"vpc","Source":"./modules/vpc","Dir":"modules/vpc"}]}
+version https://git-lfs.github.com/spec/v1
+oid sha256:81dd0412e231d0459ec1e193f08fb3e604a3da44736c83de7a075b50b4dab047
+size 620

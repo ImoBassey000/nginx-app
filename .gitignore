@@ -1,4 +1,5 @@
-.terraform/
+
+
 .terraform/modules/ec2/terraform.tfvars
 .terraform/modules/vpc/terraform.tfvars
 .terraform/modules/load-balancer/terraform.tfvars
