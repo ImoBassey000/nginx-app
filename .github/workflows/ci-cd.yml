@@ -54,7 +54,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-            terraform plan -var-file="terraform.tfvars"
+            terraform plan -var-file="variables.tf"
             working-directory: terraform
           
  #     - name: Terraform Plan
@@ -65,4 +65,5 @@ jobs:
       - name: Terraform Apply
         run: |
             cd terraform apply -auto-approve
+
 
