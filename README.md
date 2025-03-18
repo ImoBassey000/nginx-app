@@ -12,7 +12,10 @@ Set Up GitHub Secrets
 Go to your repo -> Settings -> Secrets and variables -> Actions -> New repository secret.
 Add:
 DOCKERHUB_USERNAME: Your DockerHub username
-DOCKERHUB_TOKEN: Your DockerHub access token
+DOCKERHUB_TOKEN: Your generate DockerHub access token
+AWS_ACCESS_KEY_ID: your aws access key
+AWS_SECRET_ACCESS_KEY: your aws secret key
+AWS_REGION: your aws region
 
 2. Commit and Push the Changes
 when making any changes to the code
@@ -21,3 +24,5 @@ git add .
 git commit -m "Initial commit - Nginx app with CI/CD"
 git push origin main
 Once you've pushed the changes, GitHub Actions should automatically trigger a build and push the image to DockerHub.
+
+3. 

@@ -1,5 +1,4 @@
-- name: Configure Nginx Server
-  hosts: all
+- hosts: all
   become: true
   tasks:
     - name: Install Docker
@@ -7,16 +6,18 @@
         name: docker.io
         state: present
         update_cache: yes
-
-    - name: Ensure Docker service is running
+    
+    - name: Start Docker service
       service:
         name: docker
         state: started
         enabled: yes
-
-    - name: Pull Nginx Docker image
-      command: docker pull ibassey000/my-nginx-app:latest
-
-    - name: Run Nginx container
+    
+    - name: Pull Docker image
+      command: docker pull {{ docker_image }}
+      vars:
+        docker_image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/my-nginx-app:latest"
+    
+    - name: Run Docker container
       command: >
-        docker run -d --name nginx-container -p 80:80 ibassey000/my-nginx-app:latest
+        docker run -d --name my-nginx-app -p 80:80 {{ docker_image }}
