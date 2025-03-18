@@ -1,0 +1,22 @@
+- name: Configure Nginx Server
+  hosts: all
+  become: true
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull Nginx Docker image
+      command: docker pull ibassey000/my-nginx-app:latest
+
+    - name: Run Nginx container
+      command: >
+        docker run -d --name nginx-container -p 80:80 ibassey000/my-nginx-app:latest

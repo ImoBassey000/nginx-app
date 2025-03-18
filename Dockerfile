@@ -1,10 +1,11 @@
-FROM nginx:alpine
+# Using the official Nginx image as a base
+# Copy the custom index.html
+# Expose to port 80
+# Start the Nginx
+FROM nginx:1.21-alpine
 
-# Copy the index.html file to the Nginx web root
 COPY index.html /usr/share/nginx/html/index.html
 
-# Expose port 80
 EXPOSE 80
 
-# Start Nginx 
 CMD ["nginx", "-g", "daemon off;"]

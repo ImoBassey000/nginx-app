@@ -36,16 +36,6 @@ module "ec2" {
 }
 
 
-module "rds" {
-  source        = "./modules/rds"
-  subnet_ids    = module.vpc.private_subnets  # Pass private subnet IDs
-  security_group_ids = [module.security_group.security_group_id]  # Correct argument name
-  db_username   = var.db_username
-  db_password   = var.db_password
-  db_name       = var.db_name
-}
-
-
 module "load_balancer" {
   source         = "./modules/load-balancer"
   vpc_id         = module.vpc.vpc_id
@@ -57,9 +47,6 @@ output "ec2_public_ip" {
   value = module.ec2.public_ip
 }
 
-output "rds_endpoint" {
-  value = module.rds.db_endpoint
-}
 
 output "load_balancer_dns" {
   value = module.load_balancer.lb_dns_name
