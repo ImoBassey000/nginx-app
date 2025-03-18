@@ -54,7 +54,7 @@ jobs:
 
       - name: Terraform Plan
         run: |
-            terraform plan -var-file="variables.tf"
+            terraform plan 
             working-directory: terraform
           
  #     - name: Terraform Plan
