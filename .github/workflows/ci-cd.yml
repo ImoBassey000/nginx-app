@@ -12,58 +12,72 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Install HTML Linter
+        run: sudo apt-get install tidy -y
+
       - name: Lint HTML
-        run: |
-          sudo apt-get install tidy -y
-          tidy -q -e index.html || true
+        run: tidy -q -e index.html
 
       - name: Build Docker Image
-        run: |
-          docker build -t ${{secrets.DOCKERHUB_USERNAME}}/my-nginx-app:latest .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-app:latest .
 
       - name: Log in to DockerHub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Push Docker Image to DockerHub
-        run: |
-          docker push ${{secrets.DOCKERHUB_USERNAME}}/my-nginx-app:latest
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-app:latest
 
   deploy:
     name: Deploy to AWS
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-      
-      - name: Terraform Init
-        run: |
-            cd terraform
-            rm -rf .terraform .terraform.lock.hcl
-            terraform init 
 
+      - name: Terraform Init
+        working-directory: terraform
+        run: |
+          rm -rf .terraform .terraform.lock.hcl
+          terraform init
 
       - name: Terraform Plan
-        run: |
-            terraform plan 
-            working-directory: terraform
-          
- #     - name: Terraform Plan
- #       run: |
- #           cd terraform
- #           terraform plan 
-        
+        working-directory: terraform
+        run: terraform plan
+
       - name: Terraform Apply
+        working-directory: terraform
+        run: terraform apply -auto-approve
+
+      - name: Waiting for Deployment to Finish
+        run: sleep 1800  
+
+      - name: Grab Terraform Outputs
+        working-directory: terraform
         run: |
-            cd terraform apply -auto-approve
+          echo "EC2_PUBLIC_IP=$(terraform output -raw ec2_public_ip)" >> $GITHUB_ENV
+          echo "PRIVATE_KEY=$(terraform output -raw private_key_path)" >> $GITHUB_ENV
 
+      - name: Setup SSH Key
+        run: |
+          echo "${{ env.PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
 
+      - name: Create Ansible Inventory
+        run: echo "${{ env.EC2_PUBLIC_IP }} ansible_user=${{ secrets.EC2_USER }}" > inventory
+
+      - name: Run Ansible Playbook on EC2
+        run: ansible-playbook -i inventory --private-key private_key.pem playbook.yml
+
+      - name: Cleanup SSH Key
+        run: rm -f private_key.pem inventory
