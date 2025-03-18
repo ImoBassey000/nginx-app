@@ -3,7 +3,7 @@ resource "aws_vpc" "my_vpc" {
 }
 
 resource "aws_subnet" "public" {
-  count = length(var.public_subnets)
+  count                   = length(var.public_subnets)
   vpc_id                  = aws_vpc.my_vpc.id
   cidr_block              = var.public_subnets[count.index]
   availability_zone       = element(data.aws_availability_zones.available.names, count.index)
@@ -14,7 +14,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table" "public_route_table" {
-  vpc_id = aws_vpc.my_vpc.id 
+  vpc_id = aws_vpc.my_vpc.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.internet_gateway.id
@@ -26,22 +26,22 @@ resource "aws_route_table" "public_route_table" {
 
 resource "aws_route_table_association" "public_subnet_association" {
   count          = length(var.public_subnets)
-  subnet_id      = aws_subnet.public[count.index].id 
+  subnet_id      = aws_subnet.public[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_subnet" "private" {
-  count = length(var.private_subnets)
-  vpc_id                  = aws_vpc.my_vpc.id
-  cidr_block              = var.private_subnets[count.index]
-  availability_zone       = element(data.aws_availability_zones.available.names, count.index)
+  count             = length(var.private_subnets)
+  vpc_id            = aws_vpc.my_vpc.id
+  cidr_block        = var.private_subnets[count.index]
+  availability_zone = element(data.aws_availability_zones.available.names, count.index)
   tags = {
     Name = "Private Subnet ${count.index + 1}"
   }
 }
 
 resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = aws_vpc.my_vpc.id  
+  vpc_id = aws_vpc.my_vpc.id
 
   tags = {
     Name = "InternetGateway"
