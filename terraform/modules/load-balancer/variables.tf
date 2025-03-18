@@ -7,5 +7,5 @@ variable "public_subnets" {
 }
 
 variable "security_group" {
-  type = string
+  type = list(string)
 }
