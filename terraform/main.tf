@@ -7,8 +7,8 @@ module "vpc" {
 }
 
 resource "aws_subnet" "public" {
-  count = length(var.public_subnets)
-  vpc_id = module.vpc.vpc_id  # Use the output from the VPC module
+  count  = length(var.public_subnets)
+  vpc_id = module.vpc.vpc_id # Use the output from the VPC module
   # other properties...
 }
 
