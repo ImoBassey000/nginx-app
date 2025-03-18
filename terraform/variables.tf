@@ -14,7 +14,6 @@ variable "private_subnets" {
   type        = list(string)
 }
 
-
 variable "ami" {
   description = "AMI ID for the EC2 instance"
   type        = string
