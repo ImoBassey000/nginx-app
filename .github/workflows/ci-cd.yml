@@ -51,7 +51,7 @@ jobs:
           rm -f .terraform.lock.hcl
           terraform init 
       - name: Terraform Plan
-        run: cd terraform && terraform plan
+        run: cd terraform && terraform plan 
         
       - name: Terraform Apply
         run: cd terraform apply -auto-approve
