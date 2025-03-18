@@ -54,5 +54,5 @@ jobs:
         run: cd terraform && terraform plan
         
       - name: Terraform Apply
-        run: cd terraform && terraform apply -auto-approve
+        run: cd terraform apply -auto-approve
 
