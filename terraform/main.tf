@@ -34,8 +34,7 @@ module "load_balancer" {
   source         = "./modules/load-balancer"
   vpc_id         = module.vpc.vpc_id
   public_subnets = module.vpc.public_subnets
-  security_group = module.security_group.security_group_id
-
+  security_group = [module.security_group.security_group_id]
 }
 
 output "ec2_public_ip" {
