@@ -51,10 +51,16 @@ jobs:
             rm -rf .terraform .terraform.lock.hcl
             terraform init 
 
+
       - name: Terraform Plan
         run: |
-            cd terraform
-            terraform plan 
+            terraform plan -var-file="terraform.tfvars"
+            working-directory: terraform
+          
+ #     - name: Terraform Plan
+ #       run: |
+ #           cd terraform
+ #           terraform plan 
         
       - name: Terraform Apply
         run: |
