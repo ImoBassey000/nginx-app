@@ -25,4 +25,4 @@ git commit -m "Initial commit - Nginx app with CI/CD"
 git push origin main
 Once you've pushed the changes, GitHub Actions should automatically trigger a build and push the image to DockerHub.
 
-3. 
+3. Running ansible 
