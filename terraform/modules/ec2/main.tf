@@ -11,7 +11,7 @@ resource "aws_instance" "my-ec2-instance" {
 
   user_data = <<-EOF
               #!/bin/bash
-              sudo apt-get update
+              sudo apt-get update -y
               sudo apt-get install -y ansible
             
             EOF

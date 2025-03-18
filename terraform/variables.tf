@@ -14,22 +14,6 @@ variable "private_subnets" {
   type        = list(string)
 }
 
-variable "db_username" {
-  description = "The database username"
-  type        = string
-}
-
-variable "db_password" {
-  description = "The database password"
-  type        = string
-  sensitive   = true
-}
-
-variable "db_name" {
-  description = "The name of the database to create"
-  type        = string
-  default     = "mydatabase"
-}
 
 variable "ami" {
   description = "AMI ID for the EC2 instance"
