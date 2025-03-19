@@ -4,5 +4,5 @@ terraform/modules/load-balancer/terraform.tfvars
 terraform/modules/security-group/terraform.tfvars
 terraform/modules/key-pair/terraform.tfvars
 terraform/terraform.tfvars
-.terraform/
-terraform/terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
