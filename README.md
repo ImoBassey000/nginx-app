@@ -18,7 +18,7 @@ Checkout code: Retrieves the latest code from the repository.
 Setup Terraform: Sets up Terraform on the runner.
 Configure AWS credentials: Configures AWS credentials from stored secrets to interact with AWS services.
 Terraform Init: Initializes Terraform in the terraform/ directory.
-Terraform Plan: Runs terraform plan to preview the changes Terraform will make to your infrastructure.
+Terraform Plan: Runs terraform plan to preview the changes Terraform will make to your infrastructure.(sensitive data are in *.tfvars and tfstate and added to .gitignore. hence terraform might not be able to provision your resources)
 Terraform Apply: Applies the Terraform configuration to provision resources on AWS
 Waiting for Deployment to Finish: Waits for the infrastructure to be fully deployed ( 30 minutes).
 Grab Terraform Outputs: Fetches the public IP address of the EC2 instance and the private key path from Terraform outputs.
