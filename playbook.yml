@@ -6,18 +6,86 @@
         name: docker.io
         state: present
         update_cache: yes
-    
+
     - name: Start Docker service
       service:
         name: docker
         state: started
         enabled: yes
-    
-    - name: Pull Docker image
-      command: docker pull {{ docker_image }}
-      vars:
-        docker_image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/my-nginx-app:latest"
-    
-    - name: Run Docker container
-      command: >
-        docker run -d --name my-nginx-app -p 80:80 {{ docker_image }}
+
+    - name: Pull Nginx Docker image
+      docker_image:
+        name: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/my-nginx-app"
+        tag: latest
+        source: pull
+
+    - name: Run Nginx Docker container
+      docker_container:
+        name: my-nginx-app
+        image: "{{ lookup('env', 'DOCKERHUB_USERNAME') }}/my-nginx-app:latest"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "80:80"
+
+    - name: Pull Prometheus Docker image
+      docker_image:
+        name: prom/prometheus
+        tag: latest
+        source: pull
+
+    - name: Run Prometheus Docker container
+      docker_container:
+        name: prometheus
+        image: prom/prometheus:latest
+        state: started
+        restart_policy: always
+        published_ports:
+          - "9090:9090"
+        volumes:
+          - "/etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+    - name: Pull Logstash Docker image
+      docker_image:
+        name: docker.elastic.co/logstash/logstash
+        tag: 7.10.0
+        source: pull
+
+    - name: Run Logstash Docker container
+      docker_container:
+        name: logstash
+        image: docker.elastic.co/logstash/logstash:7.10.0
+        state: started
+        restart_policy: always
+        published_ports:
+          - "5044:5044"
+
+    - name: Pull Elasticsearch Docker image
+      docker_image:
+        name: docker.elastic.co/elasticsearch/elasticsearch
+        tag: 7.10.0
+        source: pull
+
+    - name: Run Elasticsearch Docker container
+      docker_container:
+        name: elasticsearch
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.0
+        state: started
+        restart_policy: always
+        published_ports:
+          - "9200:9200"
+
+    - name: Pull Kibana Docker image
+      docker_image:
+        name: docker.elastic.co/kibana/kibana
+        tag: 7.10.0
+        source: pull
+
+    - name: Run Kibana Docker container
+      docker_container:
+        name: kibana
+        image: docker.elastic.co/kibana/kibana:7.10.0
+        state: started
+        restart_policy: always
+        published_ports:
+          - "5601:5601"
